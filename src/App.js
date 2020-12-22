@@ -46,8 +46,28 @@ const clickableElem = [
 const App = () => {
   const [display, setDisplay] = useState();
 
+  // // console.log(eval(`${value} + 2`));
+  // if (id === 'clear') {
+  //   updateDisplay('');
+  //   setAnswer('');
+  //   console.log('cleared!', answer);
+  // } else if (id !== 'equals') {
+  //     updateDisplay(value);
+
+  //     // If the button is an operator append the 
+  //     // if (id === 'add' || id === 'subtract' || 
+  //     // id === 'divide' || id === 'multiply') {
+  //     //     setAnswer(answer + value);
+  //     // }
+  //     setAnswer(answer + value);
+  //     console.log(answer);
+  // } else {
+  //     updateDisplay(eval(answer).toString());
+  // }
+
   const handleDisplay = (event) => {
     setDisplay(event);
+    // console.log(event);
   }
 
   return (

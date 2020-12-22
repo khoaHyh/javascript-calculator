@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styled, { css } from 'styled-components';
 
 const Button = styled.button`
@@ -31,20 +30,13 @@ const Button = styled.button`
 `
 
 const CalcButton = ({ id, value, updateDisplay }) => {
-    const [answer, setAnswer] = useState(0);
     
     const handleClick = () => {
-        // if (id === 'equals') {
-        //     updateDisplay(answer);
-        // } else if (id === 'clear') {
-        //     updateDisplay('');
-        // } else {
-        //     updateDisplay(value);
-        //     setAnswer(value);
-        //     console.log(answer);
-        // }
-        setAnswer(parseInt(value));
-        console.log(answer);
+        if (Number.isNaN(parseInt(value))) {
+            updateDisplay(id);
+        } else {
+            updateDisplay(value);
+        }
     }
 
     return (
