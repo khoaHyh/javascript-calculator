@@ -1,13 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import ReactFCCtest from 'react-fcctest';
 import ButtonList from './components/ButtonList';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const ButtonContainer = styled.div`
   border: solid 1px grey;
-  height: 10rem;
-  
+  height: 17rem;
+  width: 100%;
+  position: relative;
+`
+
+const Display = styled.div`
+  border: solid 1px #e75480;
+  padding: 0.5rem;
+  font-size: 1.4rem;
+  height: 3rem;
+  width: 94%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 `
 
 // Table with clickable elements as objects
@@ -32,12 +44,18 @@ const clickableElem = [
 ]
 
 const App = () => {
+  const [display, setDisplay] = useState();
+
+  const handleDisplay = (event) => {
+    setDisplay(event);
+  }
 
   return (
     <div className='App'>
       <ReactFCCtest />
+      <Display id="display">{display}</Display>
       <ButtonContainer>
-        <ButtonList clickableElem={clickableElem} />
+        <ButtonList updateDisplay={handleDisplay} clickableElem={clickableElem} />
       </ButtonContainer>
     </div>
   );
