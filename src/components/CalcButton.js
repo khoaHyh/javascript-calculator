@@ -32,11 +32,7 @@ const Button = styled.button`
 const CalcButton = ({ id, value, updateDisplay }) => {
     
     const handleClick = () => {
-        if (Number.isNaN(parseInt(value))) {
-            updateDisplay(id);
-        } else {
-            updateDisplay(value);
-        }
+        updateDisplay(value);
     }
 
     return (

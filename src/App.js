@@ -43,31 +43,40 @@ const clickableElem = [
   { id: 'equals', value: '=' }
 ]
 
+// Regex to search for decimals
+const reDec = /[.]+/g
+// Regex to search for math operators
+// might have to use /[\/|x|+|-]+/g
+const reMath = /[/|x|+|-]+/g
+
+
 const App = () => {
-  const [display, setDisplay] = useState();
+  const [display, setDisplay] = useState(`0`);
+  const [answer, setAnswer] = useState();
 
-  // // console.log(eval(`${value} + 2`));
-  // if (id === 'clear') {
-  //   updateDisplay('');
-  //   setAnswer('');
-  //   console.log('cleared!', answer);
-  // } else if (id !== 'equals') {
-  //     updateDisplay(value);
-
-  //     // If the button is an operator append the 
-  //     // if (id === 'add' || id === 'subtract' || 
-  //     // id === 'divide' || id === 'multiply') {
-  //     //     setAnswer(answer + value);
-  //     // }
-  //     setAnswer(answer + value);
-  //     console.log(answer);
-  // } else {
-  //     updateDisplay(eval(answer).toString());
-  // }
-
-  const handleDisplay = (event) => {
-    setDisplay(event);
-    // console.log(event);
+  // Method to handle the display that receives the type of button as
+  // a prop
+  const handleDisplay = (button) => {
+    // setDisplay(button);
+    // If clear button is pressed, clear answer state and display
+    if (button === 'AC') {
+      setDisplay(`0`);
+      setAnswer(``);
+    // Display answer as display
+    } else if (button === '=') {
+      setDisplay(`resolveAnswer`)
+    // Only allow display concatenation if the button is a Number or '.' and disallow
+    // more than one decimal and numbers that begin with multiple zeroes
+    // need to fix case where there is a single 0 and user clicks non-zero number
+    } else if ((!Number.isNaN(parseInt(button)) && !Number.isNaN(parseInt(display)) && button !== '0') || 
+    (!Number.isNaN(parseInt(display)) && button === '.' && !reDec.test(display))) {
+      setDisplay(display + button);
+    // Math operators are the only cases left
+    } else if (reMath.test(button)) {
+      setDisplay(button);
+      setAnswer(display + button);
+      // use .replace('x', '*') to correctly multiply
+    }
   }
 
   return (
