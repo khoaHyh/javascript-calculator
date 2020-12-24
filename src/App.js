@@ -43,10 +43,7 @@ const clickableElem = [
   { id: 'equals', value: '=' }
 ]
 
-// Regex to search for decimals
-const reDec = /[.]+/g
 // Regex to search for math operators
-// might have to use /[\/|x|+|-]+/g
 const reMath = /[/|x|+|-]+/g
 
 
@@ -57,25 +54,27 @@ const App = () => {
   // Method to handle the display that receives the type of button as
   // a prop
   const handleDisplay = (button) => {
-    // setDisplay(button);
-    // If clear button is pressed, clear answer state and display
+    // If clear button is clicked, clear answer state and display
     if (button === 'AC') {
       setDisplay(`0`);
       setAnswer(``);
-    // Display answer as display
+    // If equal button is clicked, display answer state as display
     } else if (button === '=') {
+      // use .replace('x', '*') to correctly multiply
       setDisplay(`resolveAnswer`)
-    // Only allow display concatenation if the button is a Number or '.' and disallow
-    // more than one decimal and numbers that begin with multiple zeroes
-    // need to fix case where there is a single 0 and user clicks non-zero number
-    } else if ((!Number.isNaN(parseInt(button)) && !Number.isNaN(parseInt(display)) && button !== '0') || 
-    (!Number.isNaN(parseInt(display)) && button === '.' && !reDec.test(display))) {
-      setDisplay(display + button);
-    // Math operators are the only cases left
+    // If a math operator is clicked
     } else if (reMath.test(button)) {
       setDisplay(button);
       setAnswer(display + button);
-      // use .replace('x', '*') to correctly multiply
+    // If user clicks the decimal button
+    } else if (!display.includes('.') && button === '.') {
+      setDisplay(display + button);
+    // If the answer, zero, or a math operator is on the display and a non-zero digit is clicked,
+    // set the display to the button clicked
+    } else if (display === '0' || reMath.test(display) || display === 'resolveAnswer') {
+      setDisplay(button);
+    } else if (display !== '0' && !reMath.test(display) && button !== '.') {
+      setDisplay(display + button);
     }
   }
 
