@@ -44,39 +44,66 @@ const clickableElem = [
 ]
 
 // Regex to search for math operators
-const reMath = /[/|x|+|-]+/g
+const reMath = /[/|x|+|-]+/
 
 
 const App = () => {
-  const [display, setDisplay] = useState(`0`);
+  const [display, setDisplay] = useState('0');
   const [answer, setAnswer] = useState();
 
   // Method to handle the display that receives the type of button as
   // a prop
   const handleDisplay = (button) => {
-    // If clear button is clicked, clear answer state and display
+    // If clear button is clicked
     if (button === 'AC') {
-      setDisplay(`0`);
-      setAnswer(``);
-    // If equal button is clicked, display answer state as display
+      setDisplay('0');
+      setAnswer('');
+    // If equal button is clicked
     } else if (button === '=') {
       // use .replace('x', '*') to correctly multiply
-      setDisplay(`resolveAnswer`)
+      if (reMath.test(answer.slice(-1))) {
+        // setDisplay(eval(answer.slice(0, answer.length - 1  )).toString().replace('x', '*'))
+        setDisplay(eval(answer.slice(0, answer.length - 1  )).replace('x', '*'));
+      } else { 
+        setDisplay(eval(answer.replace('x', '*')));
+      }
     // If a math operator is clicked
     } else if (reMath.test(button)) {
       setDisplay(button);
-      setAnswer(display + button);
-    // If user clicks the decimal button
+      // If answer does not equal to undefined and the last char in
+      // answer is not already a math operator
+      if (answer !== undefined && !reMath.test(answer.slice(-1))) {
+        setAnswer(answer + button);
+      }
+    // If user clicks the decimal button and there are no other decimals in the display
     } else if (!display.includes('.') && button === '.') {
       setDisplay(display + button);
-    // If the answer, zero, or a math operator is on the display and a non-zero digit is clicked,
-    // set the display to the button clicked
+      if (answer === undefined) {
+        setAnswer(button);
+      } else {
+        setAnswer(answer + button);
+      }
+    // If the answer, zero, or a math operator is on the display 
+    // and a non-zero digit is clicked
     } else if (display === '0' || reMath.test(display) || display === 'resolveAnswer') {
       setDisplay(button);
+      if (answer === undefined) {
+        setAnswer(button);
+      } else {
+        setAnswer(answer + button);
+      }
+    // If the display is not equal to 0, a math operator and button is not equal to decimal
     } else if (display !== '0' && !reMath.test(display) && button !== '.') {
       setDisplay(display + button);
+      if (answer === undefined) {
+        setAnswer(button);
+      } else {
+        setAnswer(answer + button);
+      }
     }
   }
+
+  console.log(answer);
 
   return (
     <div className='App'>
