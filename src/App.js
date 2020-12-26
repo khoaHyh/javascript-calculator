@@ -3,6 +3,7 @@ import './App.css';
 import ReactFCCtest from 'react-fcctest';
 import ButtonList from './components/ButtonList';
 import styled from 'styled-components';
+import { evaluate } from 'mathjs';
 
 const ButtonContainer = styled.div`
   border: solid 1px grey;
@@ -63,9 +64,9 @@ const App = () => {
       // use .replace('x', '*') to correctly multiply
       if (reMath.test(answer.slice(-1))) {
         // setDisplay(eval(answer.slice(0, answer.length - 1  )).toString().replace('x', '*'))
-        setDisplay(eval(answer.slice(0, answer.length - 1  )).replace('x', '*'));
+        setDisplay(evaluate(answer.slice(0, answer.length - 1  )).replace('x', '*'));
       } else { 
-        setDisplay(eval(answer.replace('x', '*')));
+        setDisplay(evaluate(answer.replace('x', '*')));
       }
     // If a math operator is clicked
     } else if (reMath.test(button)) {
