@@ -52,11 +52,13 @@ const reMultiple = /[/|x|+|-]{2,}/
 const App = () => {
   const [display, setDisplay] = useState('0');
   const [answer, setAnswer] = useState();
+  const [lastPressed, setLastPressed] = useState();
 
   // Method to handle the display that receives the type of button as
   // a prop
   const handleDisplay = (button) => {
     // If clear button is clicked
+    setLastPressed(button);
     if (button === 'AC') {
       setDisplay('0');
       setAnswer('');
@@ -70,16 +72,11 @@ const App = () => {
     // If a math operator is clicked
     } else if (reMath.test(button)) {
       setDisplay(button);
-      // if (answer !== undefined && !reMath.test(answer.slice(-1))) {
-      //   setAnswer(answer + button);
-      // } else if (answer !== undefined && button === '-') {
-      //   setAnswer(answer + button);
-      // } else if (answer !== undefined && reMath.test(answer.slice(-1))) {
-      //   setAnswer(answer.slice(0, answer.length-1) + button);
-      // }
+      // Handle cases for last button pressed and consecutive math operators pressed
       let lastTwo = answer.slice(-2).toString();
-
-      if (answer !== undefined && !reMath.test(answer.slice(-1))) {
+      if (answer !== undefined && lastPressed === '=') {
+        setAnswer(display + button);
+      } else if (answer !== undefined && !reMath.test(answer.slice(-1))) {
         setAnswer(answer + button);
       } else if (answer !== undefined && reMultiple.test(lastTwo)) {
         setAnswer(answer.slice(0, answer.length - 2) + button);
@@ -88,32 +85,18 @@ const App = () => {
       } else if (answer !== undefined && reMath.test(answer.slice(-1))) {
         setAnswer(answer.slice(0, answer.length - 1) + button);
       }
-
     // If user clicks the decimal button and there are no other decimals in the display
     } else if (display.indexOf('.') < 0 && button === '.') {
       setDisplay(display + button);
-      if (answer === undefined) {
-        setAnswer(button);
-      } else {
-        setAnswer(answer + button);
-      }
+      basicSet(button);
     // If the answer, zero, or a math operator is on the display 
     // and a non-zero digit is clicked
     } else if (display === '0' || reMath.test(display) || display === 'fixThisCondit') {
       setDisplay(button);
-      if (answer === undefined) {
-        setAnswer(button);
-      } else {
-        setAnswer(answer + button);
-      }
+      basicSet(button);
     // If the display is not equal to 0, a math operator and button is not equal to decimal
     } else if (display !== '0' && !reMath.test(display) && button !== '.') {
       setDisplay(display + button);
-      // if (answer === undefined) {
-      //   setAnswer(button);
-      // } else {
-      //   setAnswer(answer + button);
-      // }
       basicSet(button);
     }
   }
@@ -125,8 +108,6 @@ const App = () => {
       setAnswer(answer + button);
     }
   }
-
-  console.log(answer);
   
   return (
     <div className='App'>
