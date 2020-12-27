@@ -46,6 +46,7 @@ const clickableElem = [
 
 // Regex to search for math operators
 const reMath = /[/|x|+|-]+/
+const reMultiple = /[/|x|+|-]{2,}/
 
 
 const App = () => {
@@ -61,23 +62,35 @@ const App = () => {
       setAnswer('');
     // If equal button is clicked
     } else if (button === '=') {
-      // use .replace('x', '*') to correctly multiply
       if (reMath.test(answer.slice(-1))) {
-        // setDisplay(eval(answer.slice(0, answer.length - 1  )).toString().replace('x', '*'))
-        setDisplay(evaluate(answer.slice(0, answer.length - 1  )).replace('x', '*'));
+        setDisplay(evaluate(answer.slice(0, answer.length - 1  ).replace('x', '*')).toString());
       } else { 
-        setDisplay(evaluate(answer.replace('x', '*')));
+        setDisplay(evaluate(answer.replace('x', '*')).toString());
       }
     // If a math operator is clicked
     } else if (reMath.test(button)) {
       setDisplay(button);
-      // If answer does not equal to undefined and the last char in
-      // answer is not already a math operator
+      // if (answer !== undefined && !reMath.test(answer.slice(-1))) {
+      //   setAnswer(answer + button);
+      // } else if (answer !== undefined && button === '-') {
+      //   setAnswer(answer + button);
+      // } else if (answer !== undefined && reMath.test(answer.slice(-1))) {
+      //   setAnswer(answer.slice(0, answer.length-1) + button);
+      // }
+      let lastTwo = answer.slice(-2).toString();
+
       if (answer !== undefined && !reMath.test(answer.slice(-1))) {
         setAnswer(answer + button);
+      } else if (answer !== undefined && reMultiple.test(lastTwo)) {
+        setAnswer(answer.slice(0, answer.length - 2) + button);
+      } else if (answer !== undefined && button === '-') {
+        setAnswer(answer + button);
+      } else if (answer !== undefined && reMath.test(answer.slice(-1))) {
+        setAnswer(answer.slice(0, answer.length - 1) + button);
       }
+
     // If user clicks the decimal button and there are no other decimals in the display
-    } else if (!display.includes('.') && button === '.') {
+    } else if (display.indexOf('.') < 0 && button === '.') {
       setDisplay(display + button);
       if (answer === undefined) {
         setAnswer(button);
@@ -86,7 +99,7 @@ const App = () => {
       }
     // If the answer, zero, or a math operator is on the display 
     // and a non-zero digit is clicked
-    } else if (display === '0' || reMath.test(display) || display === 'resolveAnswer') {
+    } else if (display === '0' || reMath.test(display) || display === 'fixThisCondit') {
       setDisplay(button);
       if (answer === undefined) {
         setAnswer(button);
@@ -96,16 +109,25 @@ const App = () => {
     // If the display is not equal to 0, a math operator and button is not equal to decimal
     } else if (display !== '0' && !reMath.test(display) && button !== '.') {
       setDisplay(display + button);
-      if (answer === undefined) {
-        setAnswer(button);
-      } else {
-        setAnswer(answer + button);
-      }
+      // if (answer === undefined) {
+      //   setAnswer(button);
+      // } else {
+      //   setAnswer(answer + button);
+      // }
+      basicSet(button);
+    }
+  }
+
+  const basicSet = (button) => {
+    if (answer === undefined) {
+      setAnswer(button);
+    } else {
+      setAnswer(answer + button);
     }
   }
 
   console.log(answer);
-
+  
   return (
     <div className='App'>
       <ReactFCCtest />
